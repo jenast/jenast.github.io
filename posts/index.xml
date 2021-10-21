@@ -10,6 +10,23 @@
 		<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
+			<title>Make your data human-readable</title>
+			<link>/posts/2021-10-21-make-your-data-human-readable/</link>
+			<pubDate>Thu, 21 Oct 2021 00:00:00 +0000</pubDate>
+			
+			<guid>/posts/2021-10-21-make-your-data-human-readable/</guid>
+			<description>  </description>
+			<content type="html"><![CDATA[
+
+<div id="TOC">
+
+</div>
+
+
+]]></content>
+		</item>
+		
+		<item>
 			<title>slidy_test</title>
 			<link>/posts/2021-10-21-slidy-test/</link>
 			<pubDate>Thu, 21 Oct 2021 00:00:00 +0000</pubDate>

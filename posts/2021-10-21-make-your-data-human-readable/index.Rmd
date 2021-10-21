@@ -1,0 +1,12 @@
+---
+title: Make your data human-readable
+author: Jens Åström
+date: '2021-10-21'
+slug: []
+categories: []
+tags:
+  - untagged
+toc: no
+images: ~
+---
+
