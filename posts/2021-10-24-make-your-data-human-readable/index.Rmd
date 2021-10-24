@@ -1,0 +1,249 @@
+---
+title: "Disseminating your work"
+subtitle: "Make your data human-readable"
+author: "Jens Åström"
+date: "`r format(Sys.time(), '%d %b, %Y')`"
+output: NinaR::ninaSlidy
+css: /usr/local/lib/R/site-library/shiny/www/shared/bootstrap/css/bootstrap.min.css
+---
+
+This is a slidy presentation made by RMarkdown. It probably won't look good on your phone.
+
+This is the main argument of the talk
+=========
+**Sharing your data**
+
+* Machine-readable is necessary, but not sufficient for real world use
+* Complex data also needs to be human-readable
+* Write instructions to go along with your data
+
+
+It started with a dataset
+=======
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+options("xtable.comment" = F,
+        "xtable.include.rownames" = F,
+        "xtable.size" = "tiny",
+        "width" = 160)
+
+options("kableExtra.html.bsTable" = T)
+
+suppressPackageStartupMessages(require(tidyverse))
+library(knitr)
+library(kableExtra)
+```
+
+```{r, out.width = '60%'}
+include_graphics("img/NBBM_nina.png" )
+```
+
+"Darwin Core Event" made it possible to publish the full dataset on GBIF
+=========
+```{r, out.width = '50%'}
+include_graphics("img/NBBM_gbif_smaller.png" )
+```
+
+The European Butterfly Monitoring Scheme wanted it for a meta-analysis
+======
+
+```{r, out.width = '60%'}
+include_graphics("img/eBMS.png" )
+```
+
+A detour about formats
+==========
+* Sadly, data often start off like this. Not machine-readable.
+
+```{r, out.width = '90%'}
+include_graphics("img/not_machine_readable.png" )
+```
+
+
+
+```{r}
+lok_data <- tibble(location = c("lok_1", "lok_2", "lok_3", "lok_4"),
+                   habitat = rep(c("forest", "grassland"), 2),
+                   region = c("region_1", "region_1", "region_2", "region_2"),
+                   country = rep("Norway", 4))
+
+meas_data <- expand.grid(location = c("lok_1", "lok_2", "lok_3"),
+                         sample_round = c("sample_1", "sample_2", "sample_3")
+                         ) %>% 
+  mutate(sample_id = row_number(),
+         sample_time = rep(c("2020-05-01", "2020-05-10", "2020-06-10"), each = 3))
+
+variable_data <- tibble(sample_round = c("sample_1", "sample_2", "sample_3"),
+                        covariate_1 = NA,
+                        covariate_2 = NA,
+                        measurement_to_explain = NA)
+
+
+long_data <- meas_data %>% 
+  left_join(variable_data,
+            by = c("sample_round" = "sample_round")) %>% 
+  left_join(lok_data,
+            by = c("location" = "location")) %>% 
+  select( country,
+         region,
+         location,
+         habitat,
+         sample_round,
+         sample_time,
+         sample_id,
+         everything()) %>% 
+  arrange(region,
+          location,
+          sample_round
+          ) %>% 
+  mutate(covariate_1 = runif(nrow(.), min = 0, max = 1),
+         covariate_2 = runif(nrow(.), min = 5, max = 10),
+         measurement_to_explain = runif(nrow(.), min = 0, max = 100)) %>% 
+  as_tibble()
+
+var_data_to_print <- long_data %>% 
+  select(sample_id,
+         covariate_1,
+         covariate_2,
+         measurement_to_explain)
+
+
+```
+
+A detour about formats
+========
+* When it's ready for analysis, the data is usually in "long format" (each time point per subject has its own row) 
+* Complex data often end up with many columns and redundant data 
+  - This takes more space, and require custom quality checks
+
+```{r}
+long_data %>% 
+  print(width = Inf)
+```
+
+A detour about formats
+==========
+* But data is often stored in a "normalized" way, in separate tables that represent the sampling hierarchy
+
+```{r}
+cat("Note that this could be split up further")
+lok_data
+```
+
+```{r}
+meas_data %>% 
+  select(sample_id,
+         everything())
+var_data_to_print
+```
+
+A detour about formats
+=========
+* GBIF data is machine readable 
+* But to fit many types of data into one format,
+  - some columns in the original data have to be combined
+  - separate event tables have to be stacked
+  - sample hierarchy is stored as parent and child events (child events can also have children...)
+
+
+A detour about formats
+========
+* GBIF Event Core data can look like this
+
+```{r, echo = F, results ='hide', warning = F, message = FALSE}
+event_small <- read_delim("rawData/event_small.txt",
+                          delim = "\t")
+
+event <- read_delim("rawData/event.txt",
+                          delim = "\t",
+                    guess_max = 10000)
+```
+
+```{r event_table, echo = F}
+event %>% 
+    filter(eventID == 'fffcc609-fbba-42c1-b264-0912d9d7b2af' |
+           parentEventID == 'fffcc609-fbba-42c1-b264-0912d9d7b2af')  %>% 
+  head(5) 
+```
+
+```{r event_table_2, echo = F, eval = F}
+event %>% 
+  select(eventID,
+         parentEventID,
+         dynamicProperties
+         ) %>% 
+  filter(eventID == 'fffcc609-fbba-42c1-b264-0912d9d7b2af' |
+           parentEventID == 'fffcc609-fbba-42c1-b264-0912d9d7b2af') %>% 
+  select(dynamicProperties) %>% 
+  head(5) 
+```
+
+```{r, echo = F, results = 'hide', warning = F, message = FALSE}
+occurrence_small <- read_delim("rawData/occurrence_small.txt",
+                          delim = "\t") %>% 
+  mutate(individualCount = as.integer(individualCount))
+
+```
+
+```{r occurrence_table, echo = F}
+occurrence_small %>%  
+  head(5) 
+```
+
+A detour about formats
+========
+* This is machine-readable
+* But if a human doesn't understand it, who will tell the machine how to read it?
+
+
+So, I made a recipe to go from the GBIF event core to a usable format
+=============
+
+```{r, out.width = '50%'}
+include_graphics("img/recipe_gbif.png" )
+```
+
+Now anyone using R can quickly make use of the data
+=======
+```{r child = 'child_pages/NBBM_GBIF_to_BMS_export.md'}
+```
+  
+
+How do you do this?
+===========
+* Simply write a script in RMarkdown that does the job
+* Publish it 
+  - On Github. 
+  - Or on a blog (with a stable URL)
+* Link to it in the GBIF metdata
+
+Publishing on Github
+===============
+* You could put a simple .md file in a repository
+* Or make it fancy with Github pages. http://pages.github.com 
+* You can even set up your own blog with `library(blogdown)`
+  - See e.g. https://www.emilyzabor.com/tutorials/rmarkdown_websites_tutorial.html
+* There are many templates to use for Github pages. You can even get a custom URL.
+
+Sounds like a lot of work?
+============
+* Have you ever regretted writing a clear and readable R-script?
+* Get in the habit of clearly annotating your R-code!
+  - You mostly collaborate with yourself, and you-from-two-months-ago don't respond to email (common Software Carpentry saying)
+* Some writing principles  
+  - Don't underestimate your reader's intelligence, but don't overestimate their knowledge
+  - Keep it succinct
+  - But explain all the steps  
+
+Thanks
+========
+* Thanks to Emily Zabor for blogging tips (github.com/zabor)
+* Thanks to Track3 for the blog theme (github.com/Track3) 
+
+Thanks
+========
+* Thanks to Emily Zabor for blogging tips (github.com/zabor)
+* Thanks to Track3 for the blog theme (github.com/Track3) 
+
+Go back to the blog here: https://jenast.github.io/

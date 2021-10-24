@@ -2,22 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/</loc>
+    <lastmod>2021-10-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/2021-10-24-make-your-data-human-readable/</loc>
+    <lastmod>2021-10-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/posts/</loc>
+    <lastmod>2021-10-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2021-10-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/tags/untagged/</loc>
+    <lastmod>2021-10-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>/about-me/</loc>
     <lastmod>2021-10-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/</loc>
-    <lastmod>2021-10-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/posts/2021-10-21-make-your-data-human-readable/</loc>
-    <lastmod>2021-10-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/posts/</loc>
-    <lastmod>2021-10-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
-    <lastmod>2021-10-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/untagged/</loc>
-    <lastmod>2021-10-21T00:00:00+00:00</lastmod>
+    <loc>/posts/2020-08-11-exporting-complex-data-into-gbif/</loc>
+    <lastmod>2020-08-11T00:00:00+00:00</lastmod>
   </url>
 </urlset>

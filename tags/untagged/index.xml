@@ -7,13 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 21 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 24 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Make your data human-readable</title>
-      <link>/posts/2021-10-21-make-your-data-human-readable/</link>
-      <pubDate>Thu, 21 Oct 2021 00:00:00 +0000</pubDate>
+      <link>/posts/2021-10-24-make-your-data-human-readable/</link>
+      <pubDate>Sun, 24 Oct 2021 00:00:00 +0000</pubDate>
       
-      <guid>/posts/2021-10-21-make-your-data-human-readable/</guid>
+      <guid>/posts/2021-10-24-make-your-data-human-readable/</guid>
+      <description>Placeholder.</description>
+    </item>
+    
+    <item>
+      <title>Exporting complex data into GBIF</title>
+      <link>/posts/2020-08-11-exporting-complex-data-into-gbif/</link>
+      <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020-08-11-exporting-complex-data-into-gbif/</guid>
       <description>  </description>
     </item>
     
